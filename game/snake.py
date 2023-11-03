@@ -17,7 +17,7 @@ class Direction(Enum):
     UP = 3
     DOWN = 4
 
-class WeightRewards:
+class WeightRewards: 
     default = 0
     died_wall = -10
     died_ifself = -50
