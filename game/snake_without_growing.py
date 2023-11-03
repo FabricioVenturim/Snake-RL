@@ -31,7 +31,7 @@ BLACK = (0, 0, 0)
 
 # Constants for block size and speed
 BLOCK_SIZE = 20
-SPEED = 80
+SPEED = 500
 
 # Main game class
 class SnakeGame:
@@ -64,27 +64,14 @@ class SnakeGame:
         if self.food in self.snake:
             self._place_food()
 
+    # Check for collision with walls or itself
     def is_collision(self, pt=None):
         if pt is None:
             pt = self.head
-        # Check if the snake hit itself
-        if pt in self.snake[1:]:
-            return True
-        # Check if the snake hit a wall
+        # Collision with walls
         if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or pt.y > self.h - BLOCK_SIZE or pt.y < 0:
             return True
-        return False
-
-    def is_collision_wall(self, pt=None):
-        if pt is None:
-            pt = self.head
-        if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or pt.y > self.h - BLOCK_SIZE or pt.y < 0:
-            return True
-        return False
-    
-    def is_collision_snake(self, pt=None):
-        if pt is None:
-            pt = self.head
+        # Collision with itself
         if pt in self.snake[1:]:
             return True
         return False
@@ -103,28 +90,25 @@ class SnakeGame:
         reward = 0
         game_over = False
         # Check for collisions or a long game without progress
-        if self.is_collision_wall():
+        if self.is_collision():
+            print("Collision")
             game_over = True
             reward = -10
             return reward, game_over, self.score
-        
-        elif self.is_collision_snake():
-            game_over = True
-            reward = -50
-            return reward, game_over, self.score
-        
-        elif self.frame_iteration > 100 * len(self.snake):
+        if self.frame_iteration > 100 * len(self.snake) * (self.score + 1):
+            print("No progress")
             game_over = True
             reward = -10
-            print("TEMPO ESGOTADO")
             return reward, game_over, self.score
-        
+
+        # Check if the snake ate the food
         if self.head == self.food:
             self.score += 1
             reward = 10
             self._place_food()
+            self.snake.pop() 
         else:
-            self.snake.pop()
+            self.snake.pop() 
         # Update the UI
         self._update_ui()
         self.clock.tick(SPEED)
@@ -172,8 +156,8 @@ class SnakeGame:
         # Draw the snake
         for pt in self.snake:
             if pt == self.head:
-                    pygame.draw.rect(self.display, GREEN2, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
-                    pygame.draw.rect(self.display, GREEN1, pygame.Rect(pt.x + 4, pt.y + 4, 12, 12))
+                pygame.draw.rect(self.display, GREEN2, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
+                pygame.draw.rect(self.display, GREEN1, pygame.Rect(pt.x + 4, pt.y + 4, 12, 12))
             else:
                 pygame.draw.rect(self.display, BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
                 pygame.draw.rect(self.display, BLUE2, pygame.Rect(pt.x + 4, pt.y + 4, 12, 12))

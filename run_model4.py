@@ -1,6 +1,7 @@
-from agent import Agent
+from agent_model4 import Agent
 from game.snake import SnakeGame
 from helper.plot import plot
+from model.model import Linear_QNet, QTrainer
 
 # Define the training function
 def train():
