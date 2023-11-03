@@ -28,7 +28,7 @@ class Linear_QNet(nn.Module):
 
     def save(self, file_name='model.pth'): 
         # Define the folder path for saving the model
-        model_folder_path = './model'
+        model_folder_path = './Rede Neural/model'
         
         # Create the folder if it doesn't exist
         if not os.path.exists(model_folder_path):

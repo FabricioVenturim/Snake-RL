@@ -1,8 +1,14 @@
+import os
+import sys
+
+snake_rl_path = os.path.abspath(os.path.join(os.path.dirname("run_model4")))
+sys.path.append(snake_rl_path)
+
 import torch #pytorch
 import random
 import numpy as np
 from collections import deque #data structure to store memory
-from game.snake_without_growing import SnakeGame, Direction, Point 
+from game.snake import SnakeGame, Direction, Point 
 from model.model import Linear_QNet, QTrainer 
 from helper.plot import plot 
 
@@ -18,19 +24,44 @@ class Agent:
         self.epsilon = 0  # Exploration rate for making random moves
         self.gamma = 0.9  # Discount rate for considering future rewards
         self.memory = deque(maxlen=MAX_MEMORY)  # Storage for the agent's experiences
-        self.model = Linear_QNet(8, 256, 3)  # Neural network model instantiation
+        self.model = Linear_QNet(11, 256, 3)  # Neural network model instantiation
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)  # Trainer object for model training
 
     def get_state(self, game):
-        # Constructing the state from various conditions
+        # Extracting the snake's head position and nearby points
+        head = game.snake[0]
+        point_l = Point(head.x - 20, head.y)
+        point_r = Point(head.x + 20, head.y)
+        point_u = Point(head.x, head.y - 20)
+        point_d = Point(head.x, head.y + 20)
+
         # Current direction of the snake
         dir_l = game.direction == Direction.LEFT
         dir_r = game.direction == Direction.RIGHT
         dir_u = game.direction == Direction.UP
         dir_d = game.direction == Direction.DOWN
 
+        # Constructing the state from various conditions
         state = [
-            dir_l, dir_r, dir_u, dir_d,
+            # Checking if there's danger in the current direction
+            (dir_r and game.is_collision(point_r)) or
+            (dir_l and game.is_collision(point_l)) or
+            (dir_u and game.is_collision(point_u)) or
+            (dir_d and game.is_collision(point_d)),
+
+            # Checking danger to the right
+            (dir_u and game.is_collision(point_r)) or
+            (dir_d and game.is_collision(point_l)) or
+            (dir_l and game.is_collision(point_u)) or
+            (dir_r and game.is_collision(point_d)),
+
+            # Checking danger to the left
+            (dir_d and game.is_collision(point_r)) or
+            (dir_u and game.is_collision(point_l)) or
+            (dir_r and game.is_collision(point_u)) or
+            (dir_l and game.is_collision(point_d)),
+
+            dir_l, dir_r, dir_u, dir_d,  # Current direction of the snake
 
             # Food's relative position
             game.food.x < game.head.x,  
@@ -56,6 +87,7 @@ class Agent:
 
     def get_action(self, state):
         # Decide the next action based on epsilon-greedy policy
+        # TODO: olhar isso certinho
         self.epsilon = 80 - self.n_games  # Adjusting exploration rate based on games played
         final_move = [0, 0, 0]
         

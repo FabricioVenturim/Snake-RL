@@ -36,7 +36,7 @@ SPEED = 500
 # Main game class
 class SnakeGame:
     # Initialize the game
-    def __init__(self, w=640, h=480):
+    def __init__(self, w=400, h=400):
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))

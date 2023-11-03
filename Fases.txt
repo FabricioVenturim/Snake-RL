@@ -1,7 +1,0 @@
-Primeira fase: 
-    * Passar poucas coisas para o agente que não cresce
-    * Passar os 11 atributos para o agente que não cresce
-
-Segunda fase:
-    * Passar os 11 atributos para o agente que cresce
-    * Passar mais atributos para o agente que cresce

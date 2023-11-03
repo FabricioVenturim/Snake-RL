@@ -1,3 +1,4 @@
+
 from agent_model1 import Agent
 from game.snake_without_growing import SnakeGame
 from helper.plot import plot

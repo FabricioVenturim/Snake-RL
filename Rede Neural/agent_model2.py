@@ -1,3 +1,9 @@
+import os
+import sys
+
+snake_rl_path = os.path.abspath(os.path.join(os.path.dirname("run_model2")))
+sys.path.append(snake_rl_path)
+
 import torch #pytorch
 import random
 import numpy as np
@@ -18,44 +24,19 @@ class Agent:
         self.epsilon = 0  # Exploration rate for making random moves
         self.gamma = 0.9  # Discount rate for considering future rewards
         self.memory = deque(maxlen=MAX_MEMORY)  # Storage for the agent's experiences
-        self.model = Linear_QNet(11, 256, 3)  # Neural network model instantiation
+        self.model = Linear_QNet(8, 256, 3)  # Neural network model instantiation
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)  # Trainer object for model training
 
     def get_state(self, game):
-        # Extracting the snake's head position and nearby points
-        head = game.snake[0]
-        point_l = Point(head.x - 20, head.y)
-        point_r = Point(head.x + 20, head.y)
-        point_u = Point(head.x, head.y - 20)
-        point_d = Point(head.x, head.y + 20)
-
+        # Constructing the state from various conditions
         # Current direction of the snake
         dir_l = game.direction == Direction.LEFT
         dir_r = game.direction == Direction.RIGHT
         dir_u = game.direction == Direction.UP
         dir_d = game.direction == Direction.DOWN
 
-        # Constructing the state from various conditions
         state = [
-            # Checking if there's danger in the current direction
-            (dir_r and game.is_collision(point_r)) or
-            (dir_l and game.is_collision(point_l)) or
-            (dir_u and game.is_collision(point_u)) or
-            (dir_d and game.is_collision(point_d)),
-
-            # Checking danger to the right
-            (dir_u and game.is_collision(point_r)) or
-            (dir_d and game.is_collision(point_l)) or
-            (dir_l and game.is_collision(point_u)) or
-            (dir_r and game.is_collision(point_d)),
-
-            # Checking danger to the left
-            (dir_d and game.is_collision(point_r)) or
-            (dir_u and game.is_collision(point_l)) or
-            (dir_r and game.is_collision(point_u)) or
-            (dir_l and game.is_collision(point_d)),
-
-            dir_l, dir_r, dir_u, dir_d,  # Current direction of the snake
+            dir_l, dir_r, dir_u, dir_d,
 
             # Food's relative position
             game.food.x < game.head.x,  
