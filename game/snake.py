@@ -17,6 +17,13 @@ class Direction(Enum):
     UP = 3
     DOWN = 4
 
+class WeightRewards:
+    default = 0
+    died_wall = -10
+    died_ifself = -50
+    died_time = -10
+    ate = 10
+
 # Define a Point named tuple for x and y coordinates
 Point = namedtuple('Point', 'x, y')
 
@@ -36,9 +43,10 @@ SPEED = 80
 # Main game class
 class SnakeGame:
     # Initialize the game
-    def __init__(self, w=640, h=480):
+    def __init__(self, w=640, h=480, rw:WeightRewards = WeightRewards()):
         self.w = w
         self.h = h
+        self.rw = rw
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
@@ -64,6 +72,7 @@ class SnakeGame:
         if self.food in self.snake:
             self._place_food()
 
+    # Check for collision with walls or itself
     def is_collision(self, pt=None):
         if pt is None:
             pt = self.head
@@ -100,28 +109,28 @@ class SnakeGame:
         # Move the snake based on the action
         self._move(action)
         self.snake.insert(0, self.head)
-        reward = 0
+        reward = self.rw.default
         game_over = False
         # Check for collisions or a long game without progress
         if self.is_collision_wall():
             game_over = True
-            reward = -10
+            reward = self.rw.died_wall
             return reward, game_over, self.score
         
         elif self.is_collision_snake():
             game_over = True
-            reward = -50
+            reward = self.rw.died_ifself
             return reward, game_over, self.score
         
         elif self.frame_iteration > 100 * len(self.snake):
             game_over = True
-            reward = -10
+            reward = self.rw.died_time
             print("TEMPO ESGOTADO")
             return reward, game_over, self.score
         
         if self.head == self.food:
             self.score += 1
-            reward = 10
+            reward = self.rw.ate 
             self._place_food()
         else:
             self.snake.pop()
