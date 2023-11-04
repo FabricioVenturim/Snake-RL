@@ -4,7 +4,7 @@ import pickle
 
 # RL object
 class RL():
-    def __init__(self, actions, epsilon, alpha, gamma):
+    def __init__(self, actions, epsilon, alpha, gamma, leng = False):
         self.Q = {}
 
         self.A = actions
@@ -46,6 +46,19 @@ class RL():
             index = np.where(np.array(q_list) == max_q)
             result = self.A[random.choice(index[0])]
         return result
+
+# extend the RL object to get the QLearning object
+class QLearing(RL):
+    # method to update Q for (state, action)
+    # this is the only difference between Qlearning and SARSA
+    # Qlearning is updating by choosing the action with biggest Q of the new_state
+    def update_Q(self, state, action, new_state, reward):
+        q = self.Q.get((state, action), None)
+        if q is None:
+            self.Q[(state, action)] = reward
+        else:
+            max_new_q = max([self.get_Q(new_state, a) for a in self.A])
+            self.Q[(state, action)] = q + self.alpha * (reward + self.gamma * max_new_q - q)
 
 # extend the RL object to get the Sarsa object
 class Sarsa(RL):   

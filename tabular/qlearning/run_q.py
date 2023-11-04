@@ -1,0 +1,114 @@
+import os
+import sys
+
+CURRENT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+GRANDFATHER_DIRECTORY = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(GRANDFATHER_DIRECTORY)
+
+from agent_qlearning import Agent
+from game.snake import SnakeGame, WeightRewards
+from helper.plot import plot
+from ast import literal_eval
+
+LIST_TYPES = ['STATE1','STATE2','STATE3','STATE4','STATE5','STATETAB']
+TYPE_STATE = LIST_TYPES[2]
+SCORES_FILE_NAME = CURRENT_DIRECTORY + '\\results\\'+TYPE_STATE+'_scores.txt'
+QTABLE_FILE_NAME = CURRENT_DIRECTORY + '\\results\\'+TYPE_STATE+'_Q.txt'
+
+N_GAMES_TRAIN = 50000
+
+STARTING_0 = True #False #True
+
+def define_weights():
+    w = WeightRewards()
+    w.default = -1
+    w.died_wall = -10
+    w.died_time = -20
+    w.died_ifself = -10
+    w.ate = 50
+    return w
+
+# Define the training function
+def train():
+    # Lists to store scores and mean scores for plotting
+
+    if STARTING_0:
+        l = []
+    else:
+        file = open(SCORES_FILE_NAME, 'r')
+        txt = file.read()
+        file.close()
+        l = list(literal_eval(txt))
+        global N_GAMES_TRAIN 
+        N_GAMES_TRAIN = N_GAMES_TRAIN + len(l) 
+
+    plot_scores = l # []
+    plot_mean_scores = []
+    total_score = sum(plot_scores) # 0
+    record = len(l)>0 and max(l) or 0  # 0 # Record score
+
+    # Initialize the agent and the Snake game
+    agent = Agent(ng=len(plot_scores), type_state = TYPE_STATE)
+    game = SnakeGame(rw=define_weights()) # w=400, h=400, 
+
+    if not STARTING_0:
+        agent.qlearning.load_Q(QTABLE_FILE_NAME)
+
+    # Get the current state of the game
+    state_old = agent.get_state(game)
+
+    # Training loop
+    while True:
+
+        # Decide on an action based on the current state     
+        action = agent.get_action(tuple(state_old))
+
+        # Play a step in the game with the chosen action
+        reward, done, score = game.play_step(action)
+
+        # Get the new state after taking the action
+        state_new = agent.get_state(game)
+
+
+        agent.update_Q(tuple(state_old), action, 
+                      tuple(state_new), reward)
+        
+        state_old = state_new
+
+        # If the game is over
+        if done:
+            # Reset the game for a new episode
+            game.reset()
+
+            # Increment the number of games played
+            agent.n_games += 1
+
+            # Update the record score if the current score exceeds it
+            if score > record:
+                record = score
+        
+            # Update scores list and calculate mean score for plotting
+            plot_scores.append(score)
+            total_score += score
+            mean_score = total_score / agent.n_games
+            plot_mean_scores.append(mean_score)
+
+            # Display game statistics
+            print('Qlearning', TYPE_STATE, 'Game:', agent.n_games, 'Score:', score, 'Record:', record, "Mean:",round(mean_score,3))
+
+            # Save the model with the new record
+            if agent.n_games % 50 == 0:
+                agent.qlearning.save_Q(QTABLE_FILE_NAME)
+                with open(SCORES_FILE_NAME, 'w') as f:
+                    f.write(str(plot_scores))
+                print('salvo')
+
+            # Plot the scores and mean scores
+            # plot(plot_scores, plot_mean_scores)
+
+            if agent.n_games == N_GAMES_TRAIN:
+                break
+
+if __name__ == '__main__':
+    train()
+
