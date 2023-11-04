@@ -7,13 +7,14 @@ sys.path.append(FATHER_DIRECTORY)
 import numpy as np
 from game.snake import SnakeGame, Direction, Point 
 from RL.RL import Sarsa
-# from model.model import Linear_QNet, QTrainer 
+import math
 
 class Agent:
     def __init__(self, type_state, ng = 0, epsilon = 0.05, alpha = 0.8, gamma = 0.9):
         self.n_games = ng  # Counter for the number of games played
         self.type_state = type_state
-        self.sarsa = Sarsa([(1,0,0),(0,1,0),(0,0,1)], epsilon = epsilon, alpha = alpha, gamma = gamma)
+        var = (type_state == "STATE4") or (type_state == "STATE5") 
+        self.sarsa = Sarsa([(1,0,0),(0,1,0),(0,0,1)], epsilon = epsilon, alpha = alpha, gamma = gamma, leng = var)
 
     def get_state(self, game):
         # Extracting the snake's head position and nearby points
@@ -118,8 +119,34 @@ class Agent:
                 quadrant[1] = temp
             
             # Constructing the state from various conditions
-            state = [danger_up,danger_right,danger_left,tuple(quadrant),game.score]
+            state = [danger_up,danger_right,danger_left,tuple(quadrant),math.floor(game.score/5)]
 
+        if self.type_state == 'STATE5':
+
+            # quadrant is the difference of the position between target and snake head
+            quadrant = [game.food.x - game.head.x, game.food.y - game.head.y]
+
+            if dir_u:
+                quadrant[0] = self.get_direction(quadrant[0])
+                quadrant[1] = self.get_direction(quadrant[1])
+            elif dir_r:
+                temp = quadrant[0]
+                quadrant[0] = self.get_direction(quadrant[1])
+                quadrant[1] = self.get_direction(-temp)
+            elif dir_d:
+                quadrant[0] = self.get_direction(-quadrant[0])
+                quadrant[1] = self.get_direction(-quadrant[1])
+            elif dir_l:
+                temp = quadrant[0]
+                quadrant[0] = self.get_direction(-quadrant[1])
+                quadrant[1] = self.get_direction(temp)
+            
+            # Constructing the state from various conditions
+            state = [danger_up, danger_right, danger_left , tuple(quadrant),math.floor(game.score/5)]
+
+        if self.type_state=='STATETAB':
+            state = [game.head.x,game.head.y]
+        
         return state  # Convert the state to an array and return
 
     

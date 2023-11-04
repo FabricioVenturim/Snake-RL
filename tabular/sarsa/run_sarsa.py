@@ -10,22 +10,22 @@ from game.snake import SnakeGame, WeightRewards
 from helper.plot import plot
 from ast import literal_eval
 
-LIST_TYPES = ['STATE1','STATE2','STATE3','STATE4']
-TYPE_STATE = LIST_TYPES[0]
+LIST_TYPES = ['STATE1','STATE2','STATE3','STATE4','STATE5','STATETAB']
+TYPE_STATE = LIST_TYPES[-1]
 SCORES_FILE_NAME = CURRENT_DIRECTORY + '\\results\\'+TYPE_STATE+'_scores.txt'
 QTABLE_FILE_NAME = CURRENT_DIRECTORY + '\\results\\'+TYPE_STATE+'_Q.txt'
 
 N_GAMES_TRAIN = 50000
 
-STARTING_0 = True
+STARTING_0 = False #True
 
 def define_weights():
     w = WeightRewards()
     w.default = -1
     w.died_wall = -10
-    w.died_time = -10
+    w.died_time = -20
     w.died_ifself = -10
-    w.ate = 30
+    w.ate = 50
     return w
 
 # Define the training function
@@ -35,19 +35,21 @@ def train():
     if STARTING_0:
         l = []
     else:
-        arquivo = open(SCORES_FILE_NAME, 'r')
-        txt = arquivo.read()
-        arquivo.close()
+        file = open(SCORES_FILE_NAME, 'r')
+        txt = file.read()
+        file.close()
         l = list(literal_eval(txt))
+        global N_GAMES_TRAIN 
+        N_GAMES_TRAIN = N_GAMES_TRAIN + len(l) 
 
     plot_scores = l # []
     plot_mean_scores = []
     total_score = sum(plot_scores) # 0
-    record = len(l)>0 and max(l[0]) or 0  # 0 # Record score
+    record = len(l)>0 and max(l) or 0  # 0 # Record score
 
     # Initialize the agent and the Snake game
     agent = Agent(ng=len(plot_scores), type_state = TYPE_STATE)
-    game = SnakeGame(w=400, h=400, rw=define_weights())
+    game = SnakeGame(rw=define_weights()) # w=400, h=400, 
 
     if not STARTING_0:
         agent.sarsa.load_Q(QTABLE_FILE_NAME)
@@ -110,11 +112,5 @@ def train():
                 break
 
 if __name__ == '__main__':
-    train()
-    TYPE_STATE = LIST_TYPES[1]
-    train()
-    TYPE_STATE = LIST_TYPES[2]
-    train()
-    TYPE_STATE = LIST_TYPES [3]
     train()
 

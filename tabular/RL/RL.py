@@ -12,10 +12,15 @@ class RL():
         self.alpha = alpha
         self.gamma = gamma
 
+        self.leng = leng
+
     # method to return the Q based on (state, action)
     def get_Q(self, state, action):
         # default 0
-        return self.Q.get((state, action), 0.0)
+        if self.leng and state[-1] != 0:
+            return self.Q.get((state, action), self.get_Q((state[:-1]+tuple([state[-1]-1])),action))
+        else:
+            return self.Q.get((state, action), 0.0)
     
     # set the Q
     def set_Q(self, Q):
