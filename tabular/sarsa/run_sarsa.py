@@ -10,22 +10,22 @@ from game.snake import SnakeGame, WeightRewards
 from helper.plot import plot
 from ast import literal_eval
 
-LIST_TYPES = ['STATE1','STATE2','STATE3','STATE4','STATE5','STATETAB']
-TYPE_STATE = LIST_TYPES[-1]
+LIST_TYPES = ['STATE1','STATE2','STATE3','STATETAB']
+TYPE_STATE = LIST_TYPES[1]
 SCORES_FILE_NAME = CURRENT_DIRECTORY + '\\results\\'+TYPE_STATE+'_scores.txt'
 QTABLE_FILE_NAME = CURRENT_DIRECTORY + '\\results\\'+TYPE_STATE+'_Q.txt'
 
-N_GAMES_TRAIN = 50000
+N_GAMES_TRAIN = 15000
 
-STARTING_0 = False #True
+STARTING_0 =  False #True
 
 def define_weights():
     w = WeightRewards()
-    w.default = -1
+    w.default = 0
     w.died_wall = -10
-    w.died_time = -20
+    w.died_time = -10
     w.died_ifself = -10
-    w.ate = 50
+    w.ate = 5
     return w
 
 # Define the training function
@@ -96,7 +96,7 @@ def train():
             plot_mean_scores.append(mean_score)
 
             # Display game statistics
-            print(TYPE_STATE, 'Game:', agent.n_games, 'Score:', score, 'Record:', record, "Mean:",round(mean_score,3))
+            print('SARSA', TYPE_STATE, 'Game:', agent.n_games, 'Score:', score, 'Record:', record, "Mean:",round(mean_score,3))
 
             # Save the model with the new record
             if agent.n_games % 50 == 0:

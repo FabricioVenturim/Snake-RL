@@ -10,22 +10,22 @@ from game.snake import SnakeGame, WeightRewards
 from helper.plot import plot
 from ast import literal_eval
 
-LIST_TYPES = ['STATE1','STATE2','STATE3','STATE4','STATE5','STATETAB']
-TYPE_STATE = LIST_TYPES[2]
+LIST_TYPES = ['STATE1','STATE2','STATE3','STATETAB']
+TYPE_STATE = LIST_TYPES[1]
 SCORES_FILE_NAME = CURRENT_DIRECTORY + '\\results\\'+TYPE_STATE+'_scores.txt'
 QTABLE_FILE_NAME = CURRENT_DIRECTORY + '\\results\\'+TYPE_STATE+'_Q.txt'
 
-N_GAMES_TRAIN = 50000
+N_GAMES_TRAIN = 15000
 
-STARTING_0 = True #False #True
+STARTING_0 = False #True
 
 def define_weights():
     w = WeightRewards()
-    w.default = -1
+    w.default = 0
     w.died_wall = -10
-    w.died_time = -20
+    w.died_time = -10
     w.died_ifself = -10
-    w.ate = 50
+    w.ate = 5
     return w
 
 # Define the training function

@@ -10,11 +10,10 @@ from RL.RL import Sarsa
 import math
 
 class Agent:
-    def __init__(self, type_state, ng = 0, epsilon = 0.05, alpha = 0.8, gamma = 0.9):
+    def __init__(self, type_state, ng = 0, epsilon = 0.0001, alpha = 0.8, gamma = 0.9):
         self.n_games = ng  # Counter for the number of games played
         self.type_state = type_state
-        var = (type_state == "STATE4") or (type_state == "STATE5") 
-        self.sarsa = Sarsa([(1,0,0),(0,1,0),(0,0,1)], epsilon = epsilon, alpha = alpha, gamma = gamma, leng = var)
+        self.sarsa = Sarsa([(1,0,0),(0,1,0),(0,0,1)], epsilon = epsilon, alpha = alpha, gamma = gamma)
 
     def get_state(self, game):
         # Extracting the snake's head position and nearby points
@@ -44,17 +43,15 @@ class Agent:
         
         if self.type_state == "STATE1":
             # Constructing the state from various conditions
-            state = [
-                danger_up, danger_right, danger_left, # danger 
-
-                dir_l, dir_r, dir_u, dir_d,  # Current direction of the snake
-
-                # Food's relative position
+            state = [game.direction,
                 game.food.x < game.head.x,  
                 game.food.x > game.head.x,  
                 game.food.y < game.head.y,  
-                game.food.y > game.head.y   
-            ]
+                game.food.y > game.head.y,
+                game.is_collision(point_d),
+                game.is_collision(point_l),
+                game.is_collision(point_u),
+                game.is_collision(point_r)  ]   
 
         if self.type_state == 'STATE2':
             # quadrant is the difference of the position between target and snake head
@@ -99,50 +96,6 @@ class Agent:
             
             # Constructing the state from various conditions
             state = [danger_up, danger_right, danger_left , tuple(quadrant)]
-
-        if self.type_state == "STATE4":
-            # quadrant is the difference of the position between target and snake head
-            quadrant = [game.food.x - game.head.x, game.food.y - game.head.y]
-
-            if dir_u:
-                pass
-            elif dir_r:
-                temp = quadrant[0]
-                quadrant[0] = quadrant[1]
-                quadrant[1] = -temp
-            elif dir_d:
-                quadrant[0] = -quadrant[0]
-                quadrant[1] = -quadrant[1]
-            elif dir_l:
-                temp = quadrant[0]
-                quadrant[0] = -quadrant[1]
-                quadrant[1] = temp
-            
-            # Constructing the state from various conditions
-            state = [danger_up,danger_right,danger_left,tuple(quadrant),math.floor(game.score/5)]
-
-        if self.type_state == 'STATE5':
-
-            # quadrant is the difference of the position between target and snake head
-            quadrant = [game.food.x - game.head.x, game.food.y - game.head.y]
-
-            if dir_u:
-                quadrant[0] = self.get_direction(quadrant[0])
-                quadrant[1] = self.get_direction(quadrant[1])
-            elif dir_r:
-                temp = quadrant[0]
-                quadrant[0] = self.get_direction(quadrant[1])
-                quadrant[1] = self.get_direction(-temp)
-            elif dir_d:
-                quadrant[0] = self.get_direction(-quadrant[0])
-                quadrant[1] = self.get_direction(-quadrant[1])
-            elif dir_l:
-                temp = quadrant[0]
-                quadrant[0] = self.get_direction(-quadrant[1])
-                quadrant[1] = self.get_direction(temp)
-            
-            # Constructing the state from various conditions
-            state = [danger_up, danger_right, danger_left , tuple(quadrant),math.floor(game.score/5)]
 
         if self.type_state=='STATETAB':
             state = [game.head.x,game.head.y]
