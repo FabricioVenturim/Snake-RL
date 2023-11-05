@@ -27,6 +27,8 @@ BLOCK_SIZE = 20
 SPEED = 80
 
 class SnakeGame:
+    """ Class that represents the game.
+    """    
     def __init__(self, w=640, h=480):
         self.w = w
         self.h = h

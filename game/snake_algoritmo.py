@@ -28,6 +28,12 @@ SPEED = 80
 
 class SnakeGame:
     def __init__(self, w=640, h=480):
+        """Constructor for SnakeGame class.
+
+        Args:
+            w (int, optional): width of the game window. Defaults to 640.
+            h (int, optional): height of the game window. Defaults to 480.
+        """
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -36,6 +42,8 @@ class SnakeGame:
         self.reset()
 
     def reset(self):
+        """Resets the game.
+        """
         self.direction = Direction.RIGHT
         self.head = Point(self.w / 2, self.h / 2)
         self.snake = [self.head,
@@ -47,9 +55,13 @@ class SnakeGame:
         self.frame_iteration = 0
 
     def get_position(self):
+        """Returns the position of the snake.
+        """
         return self.head.x // BLOCK_SIZE, self.head.y // BLOCK_SIZE
 
     def _place_food(self):
+        """Places the food at a random position.
+        """
         x = random.randint(0, (self.w - BLOCK_SIZE) // BLOCK_SIZE) * BLOCK_SIZE
         y = random.randint(0, (self.h - BLOCK_SIZE) // BLOCK_SIZE) * BLOCK_SIZE
         self.food = Point(x, y)
@@ -57,6 +69,14 @@ class SnakeGame:
             self._place_food()
 
     def is_collision(self, pt=None):
+        """Checks if the snake collides with the wall or itself.
+
+        Args:
+            pt (Point, optional): point to check. Defaults to None.
+        Returns:
+            _type_: True if collision, False otherwise
+        """
+
         if pt is None:
             pt = self.head
         if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or pt.y > self.h - BLOCK_SIZE or pt.y < 0:
@@ -68,6 +88,14 @@ class SnakeGame:
         return False
     
     def is_collision_modify(self, pt=None):
+        """Checks if the snake collides with the wall or itself.
+
+        Args:
+            pt (_type_, optional): point to check. Defaults to None.
+
+        Returns:
+            _type_: True if collision, False otherwise
+        """        
         if pt is None:
             pt = self.head
         if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or pt.y > self.h - BLOCK_SIZE or pt.y < 0:
@@ -78,6 +106,15 @@ class SnakeGame:
         return False
 
     def play_step(self, action):
+        """Plays one step of the game.
+
+        Args:
+            action (_type_): action to take
+            
+        Returns:
+            _type_: reward, game_over, score
+        """
+
         self.frame_iteration += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -102,6 +139,12 @@ class SnakeGame:
         return reward, game_over, self.score
 
     def _move(self, action):
+        """Moves the snake according to the action.
+
+        Args:
+            action: action to take
+        """        
+
         clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
         idx = clock_wise.index(self.direction)
         if np.array_equal(action, [1, 0, 0]):
@@ -128,6 +171,9 @@ class SnakeGame:
         self.head = Point(x, y)
 
     def _update_ui(self):
+        """Updates the game window.
+        """        
+
         self.display.fill(BLACK)
         for pt in self.snake:
             pygame.draw.rect(self.display, BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
@@ -144,6 +190,17 @@ class SnakeGame:
     # apenas para solução com algoritmo
     # verifica se tal movimento gera colisão
     def is_collision_after_move(self, action, last_head):
+        """Checks if the snake collides with the wall or itself after a move.
+
+        Args:
+            action (_type_): action to take
+            last_head (_type_): last head position
+        
+        Returns:
+            _type_: True if collision, False otherwise
+
+        """
+
         x_last, y_last = last_head[0], last_head[1]
         x, y = self.head.x, self.head.y
         if x / BLOCK_SIZE < x_last and action == [1,0,0]:

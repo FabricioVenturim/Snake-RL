@@ -1,14 +1,14 @@
 import os
 import sys
 
-snake_rl_path = os.path.abspath(os.path.join(os.path.dirname("run_model4")))
+snake_rl_path = os.path.abspath(os.path.join(os.path.dirname("run_model3")))
 sys.path.append(snake_rl_path)
 
 import torch #pytorch
 import random
 import numpy as np
 from collections import deque #data structure to store memory
-from game.snake import SnakeGame, Direction, Point 
+from game.snake_without_growing import SnakeGame, Direction, Point 
 from model.model import Linear_QNet, QTrainer 
 from helper.plot import plot 
 
@@ -28,6 +28,9 @@ class Agent:
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)  # Trainer object for model training
 
     def get_state(self, game):
+        """ Gets the current state of the game.
+        """
+
         # Extracting the snake's head position and nearby points
         head = game.snake[0]
         point_l = Point(head.x - 20, head.y)
@@ -72,10 +75,23 @@ class Agent:
         return np.array(state, dtype=int)  # Convert the state to an array and return
 
     def remember(self, state, action, reward, next_state, done):
+        """ Stores the agent's experiences in memory.
+        
+        args:
+            state: current state of the game
+            action: action taken by the agent
+            reward: reward received by the agent
+            next_state: next state of the game
+            done: whether the game is over or not
+        """
+
         # Store the experience in memory
         self.memory.append((state, action, reward, next_state, done)) 
 
     def train_long_memory(self):
+        """ Trains the model on a batch of experiences from memory.
+        """
+
         # Train on a batch from the stored experiences
         mini_sample = random.sample(self.memory, BATCH_SIZE) if len(self.memory) > BATCH_SIZE else self.memory
         states, actions, rewards, next_states, dones = zip(*mini_sample)
@@ -87,7 +103,6 @@ class Agent:
 
     def get_action(self, state):
         # Decide the next action based on epsilon-greedy policy
-        # TODO: olhar isso certinho
         self.epsilon = 80 - self.n_games  # Adjusting exploration rate based on games played
         final_move = [0, 0, 0]
         

@@ -3,6 +3,13 @@ from IPython import display
 plt.ion()
 
 def plot(scores, mean_scores):
+    """Plots the scores and mean scores.
+
+    Args:
+        scores (list): list of scores
+        mean_scores (list): list of mean scores
+    """
+    
     display.clear_output(wait=True)
     display.display(plt.gcf())
     plt.clf()

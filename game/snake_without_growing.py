@@ -35,8 +35,10 @@ SPEED = 500
 
 # Main game class
 class SnakeGame:
+    """ Class that represents the game.
+    """
     # Initialize the game
-    def __init__(self, w=400, h=400):
+    def __init__(self, w=640, h=480):
         self.w = w
         self.h = h
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -46,6 +48,9 @@ class SnakeGame:
 
     # Reset game to its initial state
     def reset(self):
+        """Resets the game.
+        """        
+
         self.direction = Direction.RIGHT
         self.head = Point(self.w / 2, self.h / 2)
         self.snake = [self.head,
@@ -58,6 +63,9 @@ class SnakeGame:
 
     # Place the food in a random location on the board
     def _place_food(self):
+        """Places the food in a random location on the board.
+        """        
+
         x = random.randint(0, (self.w - BLOCK_SIZE) // BLOCK_SIZE) * BLOCK_SIZE
         y = random.randint(0, (self.h - BLOCK_SIZE) // BLOCK_SIZE) * BLOCK_SIZE
         self.food = Point(x, y)
@@ -66,6 +74,8 @@ class SnakeGame:
 
     # Check for collision with walls or itself
     def is_collision(self, pt=None):
+
+
         if pt is None:
             pt = self.head
         # Collision with walls

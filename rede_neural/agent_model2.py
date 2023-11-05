@@ -28,6 +28,10 @@ class Agent:
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)  # Trainer object for model training
 
     def get_state(self, game):
+        """
+        Returns the current state of the game.
+        """
+
         # Constructing the state from various conditions
         # Current direction of the snake
         dir_l = game.direction == Direction.LEFT
@@ -47,20 +51,49 @@ class Agent:
         return np.array(state, dtype=int)  # Convert the state to an array and return
 
     def remember(self, state, action, reward, next_state, done):
+        """ Stores the agent's experience in memory.
+
+            args:
+                state (list): current state of the game
+                action (list): action taken by the agent
+                reward (int): reward received by the agent
+                next_state (list): next state of the game
+                done (bool): whether the game is over or not
+        """
+
         # Store the experience in memory
         self.memory.append((state, action, reward, next_state, done)) 
 
     def train_long_memory(self):
+        """ Trains the model based on the agent's experiences stored in memory.
+        """
+
         # Train on a batch from the stored experiences
         mini_sample = random.sample(self.memory, BATCH_SIZE) if len(self.memory) > BATCH_SIZE else self.memory
         states, actions, rewards, next_states, dones = zip(*mini_sample)
         self.trainer.train_step(states, actions, rewards, next_states, dones)
 
     def train_short_memory(self, state, action, reward, next_state, done):
+        """ Trains the model based on the agent's immediate experience.
+            
+                args:
+                    state (list): current state of the game
+                    action (list): action taken by the agent
+                    reward (int): reward received by the agent
+                    next_state (list): next state of the game
+                    done (bool): whether the game is over or not
+        """
+
         # Train the model immediately after the agent takes an action
         self.trainer.train_step(state, action, reward, next_state, done)
 
     def get_action(self, state):
+        """ Returns the action to be taken by the agent based on the current state of the game.
+
+            args:
+                state (list): current state of the game
+        """
+
         # Decide the next action based on epsilon-greedy policy
         self.epsilon = 80 - self.n_games  # Adjusting exploration rate based on games played
         final_move = [0, 0, 0]
