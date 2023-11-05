@@ -38,7 +38,7 @@ BLACK = (0, 0, 0)
 
 # Constants for block size and speed
 BLOCK_SIZE = 20
-SPEED = 80
+SPEED = 400
 
 # Main game class
 class SnakeGame:
