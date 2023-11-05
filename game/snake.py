@@ -54,6 +54,8 @@ class SnakeGame:
 
     # Reset game to its initial state
     def reset(self):
+        """Resets the game.
+        """
         self.direction = Direction.RIGHT
         self.head = Point(self.w / 2, self.h / 2)
         self.snake = [self.head,
@@ -66,6 +68,9 @@ class SnakeGame:
 
     # Place the food in a random location on the board
     def _place_food(self):
+        """Places the food in a random location on the board.
+        """
+
         x = random.randint(0, (self.w - BLOCK_SIZE) // BLOCK_SIZE) * BLOCK_SIZE
         y = random.randint(0, (self.h - BLOCK_SIZE) // BLOCK_SIZE) * BLOCK_SIZE
         self.food = Point(x, y)
@@ -74,6 +79,14 @@ class SnakeGame:
 
     # Check for collision with walls or itself
     def is_collision(self, pt=None):
+        """Checks if the snake collides with the wall or itself.
+
+        Args:
+            pt (Point, optional): point to check. Defaults to None.
+        Returns:
+            True if there is a collision, False otherwise.
+        """
+
         if pt is None:
             pt = self.head
         # Check if the snake hit itself
@@ -85,6 +98,14 @@ class SnakeGame:
         return False
 
     def is_collision_wall(self, pt=None):
+        """ Checks if the snake collides with the wall.
+
+        Args:
+            pt (Point, optional): point to check. Defaults to None.
+        Returns:
+            True if there is a collision, False otherwise. 
+        """
+
         if pt is None:
             pt = self.head
         if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or pt.y > self.h - BLOCK_SIZE or pt.y < 0:
@@ -92,6 +113,15 @@ class SnakeGame:
         return False
     
     def is_collision_snake(self, pt=None):
+        """Checks if the snake collides with itself.
+        
+        Args:
+            pt (Point, optional): point to check. Defaults to None.
+        Returns:
+            True if there is a collision, False otherwise.
+        """
+
+
         if pt is None:
             pt = self.head
         if pt in self.snake[1:]:
@@ -100,6 +130,14 @@ class SnakeGame:
 
     # Play one step of the game
     def play_step(self, action):
+        """Plays one step of the game.
+
+        Args:
+            action (list): action to take  
+        Returns:
+            reward, game_over, score
+        """
+
         self.frame_iteration += 1
         # Handle quitting the game
         for event in pygame.event.get():
@@ -141,6 +179,12 @@ class SnakeGame:
 
     # Move the snake based on the provided action
     def _move(self, action):
+        """Moves the snake based on the provided action.
+
+        Args:
+            action (list): action to take
+        """
+
         # List that maps the four possible directions in clockwise order
         clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
         # Captures the index of the snake's current direction
@@ -176,6 +220,9 @@ class SnakeGame:
 
     # Update the game display/UI
     def _update_ui(self):
+        """Updates the game window.
+        """
+
         # Fill background with black
         self.display.fill(BLACK)
         # Draw the snake

@@ -5,6 +5,9 @@ BLOCK_SIZE = 20
 
 
 def train():
+    """Function that trains the snake to play the game.
+    """   
+
     game = SnakeGame()
     last_head = game.get_position()
     last_head = [last_head[0] - 1, last_head[1]]

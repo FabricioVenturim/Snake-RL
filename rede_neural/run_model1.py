@@ -1,10 +1,14 @@
-from agent_model2 import Agent
+
+from agent_model1 import Agent
 from game.snake_without_growing import SnakeGame
 from helper.plot import plot
 from model.model import Linear_QNet, QTrainer
 
 # Define the training function
 def train():
+    """ Trains the agent to play the Snake game.
+    """
+
     # Lists to store scores and mean scores for plotting
     plot_scores = []
     plot_mean_scores = []

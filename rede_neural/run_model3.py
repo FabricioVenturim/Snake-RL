@@ -5,6 +5,9 @@ from model.model import Linear_QNet, QTrainer
 
 # Define the training function
 def train():
+    """ Trains the agent to play the Snake game.
+    """
+
     # Lists to store scores and mean scores for plotting
     plot_scores = []
     plot_mean_scores = []

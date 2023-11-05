@@ -1,14 +1,14 @@
 import os
 import sys
 
-snake_rl_path = os.path.abspath(os.path.join(os.path.dirname("run_model3")))
+snake_rl_path = os.path.abspath(os.path.join(os.path.dirname("run_model4")))
 sys.path.append(snake_rl_path)
 
 import torch #pytorch
 import random
 import numpy as np
 from collections import deque #data structure to store memory
-from game.snake_without_growing import SnakeGame, Direction, Point 
+from game.snake import SnakeGame, Direction, Point 
 from model.model import Linear_QNet, QTrainer 
 from helper.plot import plot 
 
@@ -24,10 +24,13 @@ class Agent:
         self.epsilon = 0  # Exploration rate for making random moves
         self.gamma = 0.9  # Discount rate for considering future rewards
         self.memory = deque(maxlen=MAX_MEMORY)  # Storage for the agent's experiences
-        self.model = Linear_QNet(11, 256, 3)  # Neural network model instantiation
+        self.model = Linear_QNet(11, 512, 3)  # Neural network model instantiation
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)  # Trainer object for model training
 
     def get_state(self, game):
+        """ Gets the current state of the game.
+        """
+
         # Extracting the snake's head position and nearby points
         head = game.snake[0]
         point_l = Point(head.x - 20, head.y)
@@ -72,21 +75,52 @@ class Agent:
         return np.array(state, dtype=int)  # Convert the state to an array and return
 
     def remember(self, state, action, reward, next_state, done):
+        """ Stores the agent's experiences in memory.
+
+            args:
+                state (list): current state of the game
+                action (list): action taken by the agent
+                reward (int): reward received by the agent
+                next_state (list): next state of the game
+                done (bool): whether the game is over or not
+        """ 
+
+
         # Store the experience in memory
         self.memory.append((state, action, reward, next_state, done)) 
 
     def train_long_memory(self):
+        """ Trains the model on a batch of experiences from memory.
+        """
+
         # Train on a batch from the stored experiences
         mini_sample = random.sample(self.memory, BATCH_SIZE) if len(self.memory) > BATCH_SIZE else self.memory
         states, actions, rewards, next_states, dones = zip(*mini_sample)
         self.trainer.train_step(states, actions, rewards, next_states, dones)
 
     def train_short_memory(self, state, action, reward, next_state, done):
+        """ Trains the model immediately after the agent takes an action.
+
+            args:
+                state (list): current state of the game
+                action (list): action taken by the agent
+                reward (int): reward received by the agent
+                next_state (list): next state of the game
+                done (bool): whether the game is over or not
+        """
+
         # Train the model immediately after the agent takes an action
         self.trainer.train_step(state, action, reward, next_state, done)
 
     def get_action(self, state):
+        """ Chooses an action for the agent to take based on the current state.
+
+            args:
+                state (list): current state of the game
+        """
+
         # Decide the next action based on epsilon-greedy policy
+        # TODO: olhar isso certinho
         self.epsilon = 80 - self.n_games  # Adjusting exploration rate based on games played
         final_move = [0, 0, 0]
         
