@@ -23,6 +23,12 @@ $$Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha [R_{t+1} + \gamma Q(S_{t+1},A_{t+1})
 Um dos primeiros passos a ser tomado é a definição do espaço de ações que o agente pode tomar. Como estamos utilizando o jogo da "Cobrinha", parece intuitivo que são 4 movimentos ($\leftarrow,\uparrow,\rightarrow,\downarrow$). Poém essa conclusão é errada, quando um a Cobra faz um movimento de subir $\uparrow$, ela não pode descer $\downarrow$ imediatamente, portanto resta apenas 3 movientos($\leftarrow,\uparrow,\rightarrow$), e o fato de não poder ir pela direção oposta a atual sempre acontece, portanto foi preferível utilizar 3 ações, sendo elas relativas a cabeça, as ações possíveis são seguir em frente( $\uparrow$ ), virar a direita($\rightarrow$) e virar a esquerda($\leftarrow$).
 
 ## Estados
+
+
+
+https://github.com/FabricioVenturim/Snake-RL/assets/73307575/7717d077-2023-45f2-8a3d-47c0500fe34c
+
+
 ## Execução
 
 Para executar o modelo é necessário ir ao Diretório
