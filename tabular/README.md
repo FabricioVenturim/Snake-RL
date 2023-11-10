@@ -65,6 +65,10 @@ Pelo gráfico e pelas métricas, temos a ideia de que, com o passar do tempo, o 
 A seguir, você pode ver o resultado do jogo através do vídeo:
 
 
+
+https://github.com/FabricioVenturim/Snake-RL/assets/73307575/f312de45-64c2-48c3-8781-a7b7ab1a6f3e
+
+
 ### SARSA - Estado 3
 
 Este modelo foi o melhor e conseguiu:
@@ -80,6 +84,10 @@ Pelo gráfico e pelas métricas, vemos que a "Cobrinha" cresce e aparentemente s
 #### Vídeo
 
 A seguir, você pode ver o resultado do jogo através do vídeo:
+
+
+https://github.com/FabricioVenturim/Snake-RL/assets/73307575/43e60db5-0122-49cb-b396-69d1c7c06d64
+
 
 <!--div>& C:/Users/carlo/anaconda3/envs/RL/python.exe c:/Users/carlo/Desktop/RL/Snake-RL/tabular/sarsa/run_sarsa.py
 
