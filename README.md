@@ -15,7 +15,7 @@
 
 # Mais atualizações em breve...
 
-# [Modelos Tabulares](\tabular)
+# [Modelos Tabulares](tabular)
 
 Os modelos tabulares de RL utilizam tabelas para armazenar os valores que indicam qual ação o agente deve tomar em cada um dos estados.
 
