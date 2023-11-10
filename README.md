@@ -3,13 +3,17 @@
 
 <hr>
 
-<h3> Alunos criadores do repositório </h3>
+<h3> Participantes do grupo: </h3>
 
 <a href = "https://github.com/CarCesar"> Carlos César Fonseca <a/>
 <br>
 <a href = "https://github.com/FabricioVenturim"> Fabrício Dalvi Venturim <a/>
 <br>
 <a href = "https://github.com/TFrankeM"> Thiago Franke Melchiors <a/>
+
+<hr>
+
+[Slides da Apresentação]()
 
 <hr>
 
