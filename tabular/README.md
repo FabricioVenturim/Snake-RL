@@ -20,39 +20,67 @@ $$Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha [R_{t+1} + \gamma Q(S_{t+1},A_{t+1})
 
 ## Ações
 
-Um dos primeiros passos a ser tomado é a definição do espaço de ações que o agente pode tomar. Como estamos utilizando o jogo da "Cobrinha", parece intuitivo que são 4 movimentos ($\leftarrow,\uparrow,\rightarrow,\downarrow$). Poém essa conclusão é errada, quando um a Cobra faz um movimento de subir $\uparrow$, ela não pode descer $\downarrow$ imediatamente, portanto resta apenas 3 movientos($\leftarrow,\uparrow,\rightarrow$), e o fato de não poder ir pela direção oposta a atual sempre acontece, portanto foi preferível utilizar 3 ações, sendo elas relativas a cabeça, as ações possíveis são seguir em frente( $\uparrow$ ), virar a direita($\rightarrow$) e virar a esquerda($\leftarrow$).
+Um dos primeiros passos a serem tomados é a definição do espaço de ações que o agente pode tomar. No contexto do jogo da "Cobrinha", pode parecer intuitivo que existam 4 movimentos possíveis ($\leftarrow, \uparrow, \rightarrow, \downarrow$). No entanto, essa conclusão é equivocada. Quando a cobra faz um movimento para cima ($\uparrow$), ela não pode imediatamente descer ($\downarrow$). Portanto, restam apenas 3 movimentos ($\leftarrow, \uparrow, \rightarrow$). Além disso, o fato de não poder ir na direção oposta à atual sempre ocorre. Portanto, foi preferível utilizar 3 ações, sendo elas relativas à cabeça. As ações possíveis são seguir em frente ($\uparrow$), virar à direita ($\rightarrow$) e virar à esquerda ($\leftarrow$).
 
 ## Estados
+### State 1 - Valores Absolutos
+
+  -  Perigo para cada direção
+  -  Direção do passo anterior
+  -  Direção em relação à comida
+
+### State 2 - Distância Relativa
+
+  -  Perigo para cada ação
+  -  Distância relativa à comida
+
+### State 3 - Direção Relativa
+
+  -  Perigo para cada ação
+  -  Direção relativa à comida
+
+## Recompensas
+
+Testamos diferentes recompensas, mas a que teve melhor resultado foi:
+
+  -  Penalizamos o modelo em 10 quando morria.
+  -  Beneficiamos o modelo em 5 quando comia a fruta.
+  -  Não fizemos nada quando ele apenas se movimentava.
+
+## Melhores Modelos
+### Q-Learning - Estado 2
+
+Este modelo foi um dos melhores e alcançou:
+
+- Média (nos últimos 200): 13.8
+- Mediana (nos últimos 200): 14
+- Percentual de jogos zerados: 1.36%
+
+<img src='qlearning/results/STATE2Q-Learning.png'>
+
+Pelo gráfico e pelas métricas, temos a ideia de que, com o passar do tempo, o agente melhora sua performance. Além disso, a "Cobrinha" quase nunca terá score 0.
+
+#### Vídeo
+
+A seguir, você pode ver o resultado do jogo através do vídeo:
 
 
+### SARSA - Estado 3
 
-https://github.com/FabricioVenturim/Snake-RL/assets/73307575/7717d077-2023-45f2-8a3d-47c0500fe34c
+Este modelo foi o melhor e conseguiu:
 
+-  Média (nos últimos 200): 66.1
+-  Mediana (nos últimos 200): 65
+-  Máximo: 142
 
-## Execução
+<img src='sarsa/results/STATE3 SARSA.png'>
 
-Para executar o modelo é necessário ir ao Diretório
+Pelo gráfico e pelas métricas, vemos que a "Cobrinha" cresce e aparentemente se mantém nesse nível.
 
-`\Snake-RL\tradicional`
+#### Vídeo
 
+A seguir, você pode ver o resultado do jogo através do vídeo:
 
-STATETAB - originalmente foi treinado com pesos:
-DIED = -100
-DIEDTIME = -10
-ATE = 50
-DEFAULT = 0
+<!--div>& C:/Users/carlo/anaconda3/envs/RL/python.exe c:/Users/carlo/Desktop/RL/Snake-RL/tabular/sarsa/run_sarsa.py
 
-####Ele morre algumas vezes, várias vezes pelo tempo.
-
-O novo modelo, eu tirei a taxa epsilon e troquei os pesos para
-morre = -10
-come = 1
-### Ver qual dos dois fez a melhoria substancial.
-
-TODOS DE SARSA FORAM TREINADOS COM epsilon = 0, morre = -10, come = 1 e tempo acaba = -20.
-Tabular, não sei ao certo, só está lá. 
-
-
-& C:/Users/carlo/anaconda3/envs/RL/python.exe c:/Users/carlo/Desktop/RL/Snake-RL/tabular/sarsa/run_sarsa.py
-
-& C:/Users/carlo/anaconda3/envs/RL/python.exe c:/Users/carlo/Desktop/RL/Snake-RL/tabular/qlearning/run_q.py
+& C:/Users/carlo/anaconda3/envs/RL/python.exe c:/Users/carlo/Desktop/RL/Snake-RL/tabular/qlearning/run_q.py</div-->
