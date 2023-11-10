@@ -105,6 +105,6 @@ A seguir, você pode ver o resultado do jogo através do vídeo:
 
 https://github.com/FabricioVenturim/Snake-RL/assets/73307575/43e60db5-0122-49cb-b396-69d1c7c06d64
 
-# [Rede Neural](\rede_neural)
+# [Rede Neural](rede_neural)
 
-# [Heuristico](\Heuristico)
+# [Heuristico](Heuristico)
