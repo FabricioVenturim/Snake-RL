@@ -111,4 +111,71 @@ https://github.com/FabricioVenturim/Snake-RL/assets/73307575/43e60db5-0122-49cb-
 
 # [Rede Neural](rede_neural)
 
+## Deep Q-Learning
+
+Os métodos tradicionais de Reinforcement Learning (RL), como os modelos tabulares, têm limitações quando lidam com ambientes complexos e de grande dimensionalidade. O **Deep Q-Learning (DQN)** surge como uma evolução ao incorporar redes neurais profundas para lidar com tais desafios.
+
+### Modelo
+
+O DQN utiliza uma arquitetura de rede neural para aproximar a função Q, que atribui valores a pares estado-ação. Em vez de armazenar valores em tabelas, como nos modelos tabulares, a rede neural é treinada para prever os valores Q. A arquitetura típica consiste em uma camada de entrada representando o estado, uma ou mais camadas intermediárias (ocultas) e uma camada de saída para cada ação possível.
+
+A função de perda é calculada usando a equação de Bellman, semelhante aos modelos tabulares, mas agora aplicada à saída da rede neural. 
+
+$$Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha [R_{t+1} + \gamma \max_{a} Q(S_{t+1},a) - Q(S_t,A_t)]$$
+
+A atualização dos pesos ocorre através do algoritmo de otimização, como o Gradiente Descendente.
+
+$$Loss = E[(Q(S_t, A_t) - (R_{t+1} + γ max_a Q(S_{t+1}, a)))^2]$$ 
+
+## Ações
+
+Um dos primeiros passos a serem tomados é a definição do espaço de ações que o agente pode tomar. No contexto do jogo da "Cobrinha", pode parecer intuitivo que existam 4 movimentos possíveis ($\leftarrow, \uparrow, \rightarrow, \downarrow$). No entanto, essa conclusão é equivocada. Quando a cobra faz um movimento para cima ($\uparrow$), ela não pode imediatamente descer ($\downarrow$). Portanto, restam apenas 3 movimentos ($\leftarrow, \uparrow, \rightarrow$). Além disso, o fato de não poder ir na direção oposta à atual sempre ocorre. Portanto, foi preferível utilizar 3 ações, sendo elas relativas à cabeça. As ações possíveis são seguir em frente ($\uparrow$), virar à direita ($\rightarrow$) e virar à esquerda ($\leftarrow$).
+
+## Estados
+### State 1 - Valores Absolutos
+
+  -  Perigo para cada direção
+  -  Direção do passo anterior
+  -  Direção em relação à comida
+
+### State 2 - Distância Relativa
+
+  -  Perigo para cada ação
+  -  Distância relativa à comida
+
+### State 3 - Direção Relativa
+
+  -  Perigo para cada ação
+  -  Direção relativa à comida
+
+## Recompensas
+
+Testamos diferentes recompensas, mas a que teve melhor resultado foi:
+
+  -  Penalizamos o modelo em 10 quando morria.
+  -  Beneficiamos o modelo em 10 quando comia a fruta.
+  -  Não fizemos nada quando ele apenas se movimentava.
+
+### Testes
+
+Fizemos diferentes testes, mas os que são válidos apresentar são:
+
+#### 1. Cobrinha sem crescer
+
+Nosso primeiro teste foi usando o modelo em uma cobrinha que não cresce. O resultado foi que ela logo aprendeu e parou de morrer depois de poucas iterações:
+
+https://github.com/FabricioVenturim/Snake-RL/assets/86852019/b36cf7de-a6cf-4f76-a421-5fbf063f5ff9
+
+![Captura de tela de 2023-11-18 15-01-07](https://github.com/FabricioVenturim/Snake-RL/assets/86852019/66936fe7-0281-4a14-a23b-6ac00decf2f7)
+
+
+#### 2. Cobrinha crescendo
+
+Agora utilizamos o mesmo modelo para a cobrinha crescendo. Em poucas iterações, ela convergiu para uma boa média, dada a simplicidade do modelo:
+
+https://github.com/FabricioVenturim/Snake-RL/assets/86852019/479f7d64-d7ac-4963-a9db-5369ff172c69
+
+![image](https://github.com/FabricioVenturim/Snake-RL/assets/86852019/724f3361-2cb5-4861-9a4e-a26c8e603a00)
+
+
 # [Heuristico](Heuristico)
