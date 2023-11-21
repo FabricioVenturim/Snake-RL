@@ -210,7 +210,7 @@ https://github.com/FabricioVenturim/Snake-RL/assets/86852019/479f7d64-d7ac-4963-
 ![image](https://github.com/FabricioVenturim/Snake-RL/assets/86852019/724f3361-2cb5-4861-9a4e-a26c8e603a00)
 
 
-# [Heurístico](Heuristico)
+# [Heurístico](heuristico)
 
 <p align="justify"> 
 O algoritmo heurístico para o jogo da cobrinha é projetado para orientar o movimento autônomo da cobra com foco em sobrevivência e pontuação. A heurística se baseia em pré-definir movimentos válidos no tabuleiro de modo a evitar colisões e localizar comida eficientemente. Movimentos que resultam em colisões são descartados, e os seguros são priorizados. Para a seleção de comida, o algoritmo busca o caminho mais curto, promovendo a aproximação ao alvo e aumentando a pontuação ao consumir a comida.
