@@ -13,11 +13,17 @@
 
 <hr>
 
-[Slides da Apresentação]()
+<a href = "https://docs.google.com/presentation/d/1LqYL60JlXZVBTLjXx8VFTsdnT_2GUDTQqEZTPWXM7JU/edit?usp=sharing"> Slides da Apresentação <a/>
 
 <hr>
 
-# Mais atualizações em breve...
+<h3> Sumário: </h3>
+
+- [Modelos Tabulares](#modelos-tabulares)
+- [Rede Neural](rede-neural)
+- [Heuristico](Heuristico)
+  
+<hr>
 
 # [Modelos Tabulares](tabular)
 
@@ -179,3 +185,8 @@ https://github.com/FabricioVenturim/Snake-RL/assets/86852019/479f7d64-d7ac-4963-
 
 
 # [Heuristico](Heuristico)
+
+<div align="center">
+	<img src = "heuristico/assets/regras.png" width=40%> 
+</div>
+
