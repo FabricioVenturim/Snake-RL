@@ -20,8 +20,8 @@
 <h3> Sumário: </h3>
 
 - [Modelos Tabulares](#modelos-tabulares)
-- [Rede Neural](rede-neural)
-- [Heuristico](Heuristico)
+- [Rede Neural](#rede-neural)
+- [Heuristico](#heuristico)
   
 <hr>
 
